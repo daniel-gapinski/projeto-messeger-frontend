@@ -1,73 +1,139 @@
-# React + TypeScript + Vite
+# Projeto Messenger — Chat em Tempo Real
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicação completa de chat em tempo real, utilizando WebSockets, autenticação JWT, PostgreSQL e integração entre frontend (React + Vite) e backend (Node.js + Express + Socket.io).
 
-Currently, two official plugins are available:
+Frontend online:  
+https://projeto-messeger-frontend.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Tecnologias Utilizadas
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Frontend
+- React + Vite  
+- TypeScript  
+- TailwindCSS  
 
-## Expanding the ESLint configuration
+### Backend
+- Node.js / Express  
+- Socket.io  
+- Prisma ORM  
+- JWT para autenticação  
+- TypeScript  
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Infraestrutura
+- PostgreSQL  
+- Render (Backend)  
+- Vercel (Frontend)  
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Estrutura do Projeto
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
+### Backend
+/src
+/controllers
+/services
+/routes
+/sockets
+/prisma
+server.ts
+
+### Frontend
+/src
+/components
+/contexts
+/hooks
+/services
+/pages
+
+
+---
+
+## Como Rodar o Projeto Localmente
+
+### 1. Criar uma pasta e clonar os repositórios
+```bash
+git clone https://github.com/daniel-gapinski/projeto-messeger-backend.git
+git clone https://github.com/daniel-gapinski/projeto-messeger-frontend.git
+
+2. Instalar dependências
+Execute dentro de cada pasta:
+npm install
+
+3. Criar o banco de dados PostgreSQL
+Você pode criar o banco utilizando:
+PostgreSQL local
+Neon (recomendado)
+Railway
+Render
+Exemplo de URL de conexão:
+postgresql://user:password@host:5432/database
+
+
+4. Configurar Variáveis de Ambiente
+4.1 Backend
+Pasta: projeto-messeger-backend
+Renomeie o arquivo:
+.env.example → .env
+
+4.2 Preencha com suas credenciais:
+DATABASE_URL="sua_url_postgres"
+JWT_SECRET="sua_chave_MD5"
+PORT=3333
+
+Gerar chave MD5:
+https://www.md5hashgenerator.com/
+
+Observação sobre Prisma (versões recentes)
+O Prisma 7 não aceita mais a propriedade url dentro do arquivo schema.prisma.
+Crie o arquivo prisma.config.ts na raiz do projeto:
+
+import { defineConfig } from '@prisma/cli';
+
+export default defineConfig({
+  database: {
+    url: process.env.DATABASE_URL!,
   },
-])
-```
+});
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+E no arquivo schema.prisma deixe:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+datasource db {
+  provider = "postgresql"
+}
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+4.2 Frontend
+Renomeie:
+.env.example → .env
+
+Preencha com a URL do backend:
+VITE_API_URL="http://localhost:3333/"
+
+Se estiver usando Render:
+VITE_API_URL="https://seu-backend.onrender.com/"
+
+5. Rodar o Backend
+npm run dev
+
+6. Rodar o Frontend
+npm run dev
+
+O frontend abrirá automaticamente em:
+http://localhost:5173/
+
+Funcionamento do WebSocket (Socket.io)
+O usuário conecta ao websocket enviando um token JWT.
+Principais eventos utilizados:
+sendMessage
+receiveMessage
+sendFriendRequest
+notifyFriendRequest
+connect
+disconnect
+Cada socket é autenticado e vinculado ao ID do usuário extraído do token JWT.
+
+
+Autor
+Daniel Augusto Gapinski
+LinkedIn: https://linkedin.com/in/daniel-augusto-gapinski-7935b918b/
