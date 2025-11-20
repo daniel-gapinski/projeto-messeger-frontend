@@ -113,10 +113,17 @@ VITE_API_URL="http://localhost:3333/"
 Se estiver usando Render:
 VITE_API_URL="https://seu-backend.onrender.com/"
 
-5. Rodar o Backend
+5. Gerar Prisma Client (OBRIGATÓRIO)
+Dentro da pasta do backend, execute:
+
+npx prisma generate
+
+Sem este comando o backend não inicia.
+
+6. Rodar o Backend
 npm run dev
 
-6. Rodar o Frontend
+7. Rodar o Frontend
 npm run dev
 
 O frontend abrirá automaticamente em:
